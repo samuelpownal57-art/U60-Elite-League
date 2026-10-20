@@ -179,6 +179,49 @@ document.querySelector('#game-form').addEventListener('submit', async (event) =>
 
   document.querySelector('#game-form').reset();
 });
+async function loadGameAndPlayerOptions() {
+  const gameSelect = document.querySelector('#stats-game');
+  const playerSelect = document.querySelector('#stats-player');
+  const status = document.querySelector('#stats-status');
+
+  const { data: games, error: gamesError } = await supabase
+    .from('games')
+    .select('id, game_date, opponent')
+    .order('game_date', { ascending: false });
+
+  if (gamesError) {
+    status.textContent = 'Could not load games: ' + gamesError.message;
+    return;
+  }
+
+  gameSelect.innerHTML = '<option value="">Select a game</option>';
+
+  games.forEach((game) => {
+    const option = document.createElement('option');
+    option.value = game.id;
+    option.textContent = `${game.game_date} - ${game.opponent}`;
+    gameSelect.appendChild(option);
+  });
+
+  const { data: players, error: playersError } = await supabase
+    .from('players')
+    .select('id, name')
+    .order('name');
+
+  if (playersError) {
+    status.textContent = 'Could not load players: ' + playersError.message;
+    return;
+  }
+
+  playerSelect.innerHTML = '<option value="">Select a player</option>';
+
+  players.forEach((player) => {
+    const option = document.createElement('option');
+    option.value = player.id;
+    option.textContent = player.name;
+    playerSelect.appendChild(option);
+  });
+}
 async function loadLeaderboard() {
   const status = document.querySelector('#status');
   const table = document.querySelector('#leaderboard');
