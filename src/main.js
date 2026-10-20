@@ -31,7 +31,20 @@ document.querySelector('#app').innerHTML = `
       <p id="login-status" role="status"></p>
     </section>
 
-    <section class="card">
+    <section class="card" id="game-entry-card" hidden>
+  <h2>🏒 Enter Game Statistics</h2>
+
+  <form id="game-form">
+    <label for="game-date">Game Date</label>
+    <input id="game-date" type="date" required>
+
+    <label for="opponent">Opponent</label>
+    <input id="opponent" type="text" required placeholder="Opponent's team">
+
+    <button type="submit">Create Game</button>
+    <p id="game-status" role="status"></p>
+  </form>
+</section><section class="card">
       <h2>🏆 Team Leaderboard</h2>
       <p id="status">Loading players...</p>
 
