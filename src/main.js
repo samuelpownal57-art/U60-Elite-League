@@ -8,8 +8,24 @@ document.querySelector('#app').innerHTML = `
   </header>
 
   <main class="container">
+    <section class="card" id="login-card">
+      <h2>Admin Login</h2>
+      <p>Sign in to manage league statistics.</p>
+
+      <form id="login-form">
+        <label for="email">Email</label>
+        <input id="email" type="email" required placeholder="Your email">
+
+        <label for="password">Password</label>
+        <input id="password" type="password" required placeholder="Your password">
+
+        <button type="submit">Sign In</button>
+        <p id="login-status" role="status"></p>
+      </form>
+    </section>
+
     <section class="card">
-      <h2>🏆 Leaderboard</h2>
+      <h2>🏆 Team Leaderboard</h2>
       <p id="status">Loading players...</p>
 
       <div class="table-wrapper">
@@ -30,6 +46,28 @@ document.querySelector('#app').innerHTML = `
     </section>
   </main>
 `;
+
+document.querySelector('#login-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const status = document.querySelector('#login-status');
+  status.textContent = 'Signing in...';
+
+  const email = document.querySelector('#email').value;
+  const password = document.querySelector('#password').value;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    status.textContent = 'Login failed: ' + error.message;
+    return;
+  }
+
+  status.textContent = 'Signed in successfully!';
+});
 
 async function loadLeaderboard() {
   const status = document.querySelector('#status');
