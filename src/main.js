@@ -8,20 +8,27 @@ document.querySelector('#app').innerHTML = `
   </header>
 
   <main class="container">
-    <section class="card" id="login-card">
-      <h2>Admin Login</h2>
-      <p>Sign in to manage league statistics.</p>
+    <section class="card">
+      <h2>Admin Account</h2>
 
-      <form id="login-form">
-        <label for="email">Email</label>
-        <input id="email" type="email" required placeholder="Your email">
+      <div id="signed-out">
+        <form id="login-form">
+          <label for="email">Email</label>
+          <input id="email" type="email" required placeholder="Your email">
 
-        <label for="password">Password</label>
-        <input id="password" type="password" required placeholder="Your password">
+          <label for="password">Password</label>
+          <input id="password" type="password" required placeholder="Your password">
 
-        <button type="submit">Sign In</button>
-        <p id="login-status" role="status"></p>
-      </form>
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+
+      <div id="signed-in" hidden>
+        <p id="account-status"></p>
+        <button id="sign-out-button" type="button">Sign Out</button>
+      </div>
+
+      <p id="login-status" role="status"></p>
     </section>
 
     <section class="card">
@@ -47,11 +54,27 @@ document.querySelector('#app').innerHTML = `
   </main>
 `;
 
-document.querySelector('#login-form').addEventListener('submit', async (event) => {
+const loginForm = document.querySelector('#login-form');
+const loginStatus = document.querySelector('#login-status');
+const signedOut = document.querySelector('#signed-out');
+const signedIn = document.querySelector('#signed-in');
+const accountStatus = document.querySelector('#account-status');
+
+async function updateLoginDisplay() {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  signedOut.hidden = Boolean(session);
+  signedIn.hidden = !session;
+
+  if (session) {
+    accountStatus.textContent = `Signed in as ${session.user.email}`;
+  }
+}
+
+loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  const status = document.querySelector('#login-status');
-  status.textContent = 'Signing in...';
+  loginStatus.textContent = 'Signing in...';
 
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
@@ -62,11 +85,32 @@ document.querySelector('#login-form').addEventListener('submit', async (event) =
   });
 
   if (error) {
-    status.textContent = 'Login failed: ' + error.message;
+    loginStatus.textContent = 'Login failed: ' + error.message;
     return;
   }
 
-  status.textContent = 'Signed in successfully!';
+  loginStatus.textContent = 'Signed in successfully!';
+  loginForm.reset();
+
+  await updateLoginDisplay();
+});
+
+document.querySelector('#sign-out-button').addEventListener('click', async () => {
+  loginStatus.textContent = 'Signing out...';
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    loginStatus.textContent = 'Sign-out failed: ' + error.message;
+    return;
+  }
+
+  loginStatus.textContent = 'You have signed out.';
+  await updateLoginDisplay();
+});
+
+supabase.auth.onAuthStateChange(() => {
+  updateLoginDisplay();
 });
 
 async function loadLeaderboard() {
@@ -102,4 +146,5 @@ async function loadLeaderboard() {
   `).join('');
 }
 
+updateLoginDisplay();
 loadLeaderboard();
