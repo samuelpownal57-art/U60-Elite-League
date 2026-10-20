@@ -125,7 +125,35 @@ document.querySelector('#sign-out-button').addEventListener('click', async () =>
 supabase.auth.onAuthStateChange(() => {
   updateLoginDisplay();
 });
+document.querySelector('#game-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
 
+  const status = document.querySelector('#game-status');
+  status.textContent = 'Saving game...';
+
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    status.textContent = 'Please sign in before creating a game.';
+    return;
+  }
+
+  const game_date = document.querySelector('#game-date').value;
+  const opponent = document.querySelector('#opponent').value.trim();
+
+  const { error } = await supabase
+    .from('games')
+    .insert([{ game_date, opponent }]);
+
+  if (error) {
+    status.textContent = 'Could not save game: ' + error.message;
+    return;
+  }
+
+  status.textContent = 'Game created successfully!';
+
+  document.querySelector('#game-form').reset();
+});
 async function loadLeaderboard() {
   const status = document.querySelector('#status');
   const table = document.querySelector('#leaderboard');
