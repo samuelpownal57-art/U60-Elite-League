@@ -69,7 +69,7 @@ document.querySelector('#app').innerHTML = `
     <p id="stats-status" role="status"></p>
   </form>
 </section>
-<section class="card">
+<section class="card" id="stats-entry-card">
       <h2>🏆 Team Leaderboard</h2>
       <p id="status">Loading players...</p>
 
