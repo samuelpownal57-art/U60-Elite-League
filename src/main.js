@@ -104,6 +104,7 @@ async function updateLoginDisplay() {
   signedOut.hidden = Boolean(session);
   signedIn.hidden = !session;
 document.querySelector('#game-entry-card').hidden = !session;
+  document.getElementById('stats-entry-card').hidden = !session;
   if (session) {
     accountStatus.textContent = `Signed in as ${session.user.email}`;
   }
