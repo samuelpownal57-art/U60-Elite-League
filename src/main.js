@@ -44,7 +44,32 @@ document.querySelector('#app').innerHTML = `
     <button type="submit">Create Game</button>
     <p id="game-status" role="status"></p>
   </form>
-</section><section class="card">
+</section>
+<section class="card">
+  <h2>📊 Enter Player Statistics</h2>
+
+  <form id="stats-form">
+    <label for="stats-game">Game</label>
+    <select id="stats-game" required>
+      <option value="">Select a game</option>
+    </select>
+
+    <label for="stats-player">Player</label>
+    <select id="stats-player" required>
+      <option value="">Select a player</option>
+    </select>
+
+    <label for="stats-goals">Goals</label>
+    <input id="stats-goals" type="number" min="0" value="0" required>
+
+    <label for="stats-assists">Assists</label>
+    <input id="stats-assists" type="number" min="0" value="0" required>
+
+    <button type="submit">Save Player Statistics</button>
+    <p id="stats-status" role="status"></p>
+  </form>
+</section>
+<section class="card">
       <h2>🏆 Team Leaderboard</h2>
       <p id="status">Loading players...</p>
 
