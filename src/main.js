@@ -222,6 +222,48 @@ async function loadGameAndPlayerOptions() {
     playerSelect.appendChild(option);
   });
 }
+document.querySelector('#stats-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const status = document.querySelector('#stats-status');
+  status.textContent = 'Saving statistics...';
+
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    status.textContent = 'Please sign in before saving statistics.';
+    return;
+  }
+
+  const game_id = document.querySelector('#stats-game').value;
+  const player_id = document.querySelector('#stats-player').value;
+  const goals = Number(document.querySelector('#stats-goals').value);
+  const assists = Number(document.querySelector('#stats-assists').value);
+
+  if (!game_id || !player_id) {
+    status.textContent = 'Please select a game and a player.';
+    return;
+  }
+
+  const { error } = await supabase
+    .from('player_game_stats')
+    .upsert(
+      [{ game_id, player_id, goals, assists }],
+      { onConflict: 'player_id,game_id' }
+    );
+
+  if (error) {
+    status.textContent = 'Could not save statistics: ' + error.message;
+    return;
+  }
+
+  status.textContent = 'Statistics saved successfully!';
+
+  document.querySelector('#stats-form').reset();
+
+  await loadLeaderboard();
+  await loadGameAndPlayerOptions();
+});
 async function loadLeaderboard() {
   const status = document.querySelector('#status');
   const table = document.querySelector('#leaderboard');
