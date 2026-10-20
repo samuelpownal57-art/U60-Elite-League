@@ -257,3 +257,4 @@ async function loadLeaderboard() {
 
 updateLoginDisplay();
 loadLeaderboard();
+loadGameAndPlayerOptions();
