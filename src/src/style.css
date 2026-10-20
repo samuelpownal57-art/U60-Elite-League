@@ -59,3 +59,38 @@ body {
     padding: 18px;
   }
 }
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+th {
+  background: #102544;
+  color: white;
+  padding: 14px 12px;
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+tbody tr:hover {
+  background: #e0f2fe;
+}
+
+td strong {
+  color: #0369a1;
+  font-size: 1.1rem;
+}
