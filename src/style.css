@@ -94,3 +94,6 @@ td strong {
   color: #0369a1;
   font-size: 1.1rem;
 }
+[hidden] {
+  display: none !important;
+}
