@@ -45,7 +45,7 @@ document.querySelector('#app').innerHTML = `
     <p id="game-status" role="status"></p>
   </form>
 </section>
-<section class="card">
+<section class="card" id="stats-entry-card" hidden>
   <h2>📊 Enter Player Statistics</h2>
 
   <form id="stats-form">
